@@ -14,7 +14,6 @@ const YoutubeVideoCard = ({ data }) => {
             <a href={`https://www.youtube.com/watch?v=${data.id.videoId}`}>
                 <img src={url} className={clsx(classes.img)} alt='youtube-card' />
             </a>
-           
             <p title={title}>{title}</p>
         </Box>
     );

@@ -5,19 +5,42 @@ import {
     IconButton,
     InputLabel,
     makeStyles,
-
+    colors
 } from '@material-ui/core';
+import { createMuiTheme } from '@material-ui/core/styles';
 import { Search, Close } from '@material-ui/icons';
 import clsx from 'clsx';
+import { ThemeProvider } from '@material-ui/core/styles';
 
+const theme = createMuiTheme({palette:{
+    primary:{
+        main:'#FFF',
+        contrastText:'#FFF'
+    },
+}})
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        display: 'flex',
-        flexWrap: 'wrap',
+        '& ..MuiInputBase-input':{
+            color:'#FFF'
+        },
+        '& .MuiInput-underline:before':{
+            borderColor: '#FFF'
+        },
+        '& .MuiInput-underline:hover:not(.Mui-disabled):before':{
+            borderColor: colors.deepOrange[100]
+        },
+        '& .MuiSvgIcon-root':{
+            color:'#FFF'
+        },
+        '& .MuiFormLabel-root':{
+            color:'#FFF'
+        }
     },
     margin: {
-        margin: theme.spacing(1),
+        marginTop:theme.spacing(1),
+        marginBottom:theme.spacing(2),
+        // color:'#FFF'
     },
     withoutLabel: {
         marginTop: theme.spacing(3),
@@ -27,31 +50,42 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const SearchBar = ({ onChange, placeholder, query, onClear, onSubmit }) => {
+const SearchBar = ({
+    onChange,
+    placeholder,
+    query = '',
+    onClear,
+    onSubmit,
+}) => {
     const classes = useStyles();
     return (
-        <FormControl className={clsx(classes.margin)} fullWidth>
-            <InputLabel htmlFor='standard-adornment-password'>
-                {placeholder}
-            </InputLabel>
-            <Input
-                onChange={onChange}
-                value={query}
-                endAdornment={
-                    <InputAdornment position='end'>
-                        {query.length > 0 && (
-                            <IconButton onClick={onClear}>
-                                <Close />
-                            </IconButton>
-                        )}
+        <ThemeProvider theme={theme}>
+        <form >
+            <FormControl color='primary' className={clsx(classes.margin,classes.root)} fullWidth>
+                <InputLabel color="primary" htmlFor='standard-adornment-password'>
+                    {placeholder}
+                </InputLabel>
+                <Input
+                    color="primary"
+                    onChange={onChange}
+                    value={query}
+                    endAdornment={
+                        <InputAdornment position='end'>
+                            {query.length > 0 && (
+                                <IconButton  onClick={onClear}>
+                                    <Close />
+                                </IconButton>
+                            )}
 
-                        <IconButton onClick={onSubmit}>
-                            <Search />
-                        </IconButton>
-                    </InputAdornment>
-                }
-            />
-        </FormControl>
+                            <IconButton  onClick={onSubmit}>
+                                <Search />
+                            </IconButton>
+                        </InputAdornment>
+                    }
+                />
+            </FormControl>
+        </form>
+        </ThemeProvider>
     );
 };
 

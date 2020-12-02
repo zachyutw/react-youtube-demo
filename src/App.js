@@ -1,37 +1,39 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 // import logo from './logo.svg';
 import './App.css';
-import { useMemo,useCallback } from 'react';
+import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { Button, makeStyles, Container, Box,IconButton } from '@material-ui/core';
-
+import { Container, Box } from '@material-ui/core';
+import styled from 'styled-components';
+import { useTheme } from '@material-ui/core/styles';
 import useSearchControl from './containers/Search/useSearchControl';
 import YoutubeVideoCard from './components/Youtube/YoutubeVideoCard';
 import SearchBar from './components/Search/SearchBar';
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        display: 'flex',
-        flexWrap: 'wrap',
-    },
-    margin: {
-        margin: theme.spacing(1),
-    },
-    withoutLabel: {
-        marginTop: theme.spacing(3),
-    },
-    textField: {
-        width: '25ch',
-    },
-}));
+import Pagination from './components/Pagination/Pagination';
+
+const VideosGrid = styled.div`
+    display:grid;
+    grid-template-columns: 33% 33% 33%;
+    ${ props=>props.theme.breakpoints.down('sm')}{
+        grid-template-columns: 50% 50%;
+    }
+    ${ props=>props.theme.breakpoints.down('xs')}{
+        grid-template-columns: 100%;
+    }
+`
+
+const Header = styled.header`
+    background-color: #FF5556;
+`
 
 function App() {
+    
     const {
         q,
         onSearchChange,
         onSearchClear,
         onSearchSubmit,
-        onSearchNextPage,
         onSetStart,
     } = useSearchControl();
 
@@ -43,15 +45,14 @@ function App() {
         items,
         start,
     ]);
-    
-    const checkIsCurrentPage = useCallback((value)=>start===value*10,[start]);
+
+    const theme =useTheme();
 
     return (
         <Box className='App'>
-            <header>
+            <Header>
                 <Container>
-                  <Box margin="0 auto" width="80%">
-                    <form >
+                    <Box margin='0 auto' width='80%'>
                         <SearchBar
                             placeholder='熱門音樂'
                             query={q}
@@ -59,32 +60,19 @@ function App() {
                             onClear={onSearchClear}
                             onSubmit={onSearchSubmit}
                         />
-                    </form>
                     </Box>
                 </Container>
-            </header>
+            </Header>
             <main>
                 <Container>
-                    <Box display='flex' flexWrap='wrap'>
+                    <VideosGrid theme={theme}>
                         {videos.map((data) => (
-                            <Box key={data.etag} flex='1 46%' margin='10px 2%'>
+                            <Box key={data.etag} padding="14px">
                                 <YoutubeVideoCard data={data} />
                             </Box>
                         ))}
-                    </Box>
-                    <Box padding='50px 0'>
-                        {[0, 1, 2].map((value) => (
-                            <IconButton
-                                key={value}
-                                size="small"
-                                onClick={onSetStart(value * 10)}
-                                style={{width:'30px',height:'30px',borderRadius:'50%',backgroundColor:checkIsCurrentPage(value) ? '#FF5556':'',color:checkIsCurrentPage(value)? "#FFF":'' }}
-                                >
-                                {value + 1}
-                              
-                            </IconButton>
-                        ))}
-                    </Box>
+                    </VideosGrid>
+                    <Pagination onClick={onSetStart} start={start} pages={3} />
                 </Container>
             </main>
         </Box>

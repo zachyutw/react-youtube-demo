@@ -6,29 +6,47 @@ const NAME = 'videos';
 const LOADING_STATE = ['pending', 'idle', 'error'];
 
 const IDS = {
-    videoQ:'videoQ'
+    videoQ:'videoQ',
+    videosCache:'videosCache',
+    videoStart:'videoStart'
 }
 
+const localJSON = {
+    getItem: (itemKey)=>{
+        try{
+            return JSON.parse( localStorage.getItem(itemKey));
+        }catch(err){
+            console.error(err);
+            return null
+        }
+    },
+    setItem: (itemKey,item)=> localStorage.setItem(itemKey,JSON.stringify(item))
+}
+
+
 const initialState = {
-    start:0,
-    data: { items: [] },
+    start: +localStorage.getItem(IDS.videoStart) || 0,
+    data: localJSON.getItem(IDS.videosCache) || { items: [] },
     loading: false,
     error: {},
     params:{
-        q: localStorage.getItem(IDS.videoQ),
+        q: localStorage.getItem(IDS.videoQ) || '',
         pageToken: undefined,
     },
 };
+
+
 
 const slice = createSlice({
     name: NAME,
     initialState,
     reducers: {
-        fetchLoading(state) {
+    fetchLoading(state) {
             state.loading = LOADING_STATE[0];
         },
         receivedVideos(state, action) {
             state.data = action.payload;
+            localJSON.setItem(IDS.videosCache,action.payload);
             state.loading = LOADING_STATE[1];
         },
         fetchFailure(state, action) {
@@ -41,6 +59,7 @@ const slice = createSlice({
         },
         setStart(state,action){
             state.start = action.payload;
+            localStorage.setItem(IDS.videoStart,action.payload);
         }
     },
 });

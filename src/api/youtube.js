@@ -5,7 +5,7 @@ const instance = axios.create({
 
 const MAX = 30;
 const defaultParams = {
-    key: process.env.REACT_APP_YOUTUBE_API_KEY,
+    key: process.env.REACT_APP_YOUTUBE_API_KEY2,
     part: 'snippet',
     type: 'video',
     videoCategoryId: '10',
