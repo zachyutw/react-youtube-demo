@@ -1,19 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 // import logo from './logo.svg';
-import { useEffect, useCallback, useState } from 'react';
 import './App.css';
-import { useSelector, useDispatch } from 'react-redux';
-import { searchVideos } from './redux/slices/videosSlice';
-import {
-    FormControl,
-    Input,
-    InputAdornment,
-    IconButton,
-    InputLabel,
-    makeStyles,
-} from '@material-ui/core';
-import { Search, Close } from '@material-ui/icons';
-import clsx from 'clsx';
+import { useMemo,useCallback } from 'react';
+import { useSelector } from 'react-redux';
+import { Button, makeStyles, Container, Box,IconButton } from '@material-ui/core';
+
+import useSearchControl from './containers/Search/useSearchControl';
+import YoutubeVideoCard from './components/Youtube/YoutubeVideoCard';
+import SearchBar from './components/Search/SearchBar';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -31,69 +25,69 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const SearchBar = ({ onChange, placeholder, query, onClear, onSubmit }) => {
-    const classes = useStyles();
-    return (
-        <FormControl className={clsx(classes.margin)} fullWidth>
-            <InputLabel htmlFor='standard-adornment-password'>
-                {placeholder}
-            </InputLabel>
-            <Input
-                onChange={onChange}
-                value={query}
-                endAdornment={
-                    <InputAdornment position='end'>
-                        {query.length > 0 && (
-                            <IconButton onClick={onClear}>
-                                <Close />
-                            </IconButton>
-                        )}
-
-                        <IconButton>
-                            <Search />
-                        </IconButton>
-                    </InputAdornment>
-                }
-            />
-        </FormControl>
-    );
-};
-
-const useSearchControl = ()=>{
-  const { query } = useSelector((state) => state.video);
-
-    const dispatch = useDispatch();
-
-    useEffect(() => {
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-    const onSearchChange = useCallback((e) => {
-        dispatch(searchVideos(e.target.value));
-    }, []);
-
-    const onSearchClear = useCallback(()=>{
-      dispatch(searchVideos(''));
-    },[]);
-    return {query, onSearchChange,onSearchClear};
-}
-
-
 function App() {
-    const {query, onSearchChange,onSearchClear} = useSearchControl();
+    const {
+        q,
+        onSearchChange,
+        onSearchClear,
+        onSearchSubmit,
+        onSearchNextPage,
+        onSetStart,
+    } = useSearchControl();
+
+    const {
+        data: { items },
+        start,
+    } = useSelector((state) => state.video);
+    const videos = useMemo(() => items.slice(start, start + 10), [
+        items,
+        start,
+    ]);
+    
+    const checkIsCurrentPage = useCallback((value)=>start===value*10,[start]);
+
     return (
-        <div className='App'>
+        <Box className='App'>
             <header>
-                <form>
-                    <SearchBar
-                        placeholder='熱門音樂'
-                        query={query}
-                        onChange={onSearchChange}
-                        onClear={onSearchClear}
-                    />
-                </form>
+                <Container>
+                  <Box margin="0 auto" width="80%">
+                    <form >
+                        <SearchBar
+                            placeholder='熱門音樂'
+                            query={q}
+                            onChange={onSearchChange}
+                            onClear={onSearchClear}
+                            onSubmit={onSearchSubmit}
+                        />
+                    </form>
+                    </Box>
+                </Container>
             </header>
-      
-        </div>
+            <main>
+                <Container>
+                    <Box display='flex' flexWrap='wrap'>
+                        {videos.map((data) => (
+                            <Box key={data.etag} flex='1 46%' margin='10px 2%'>
+                                <YoutubeVideoCard data={data} />
+                            </Box>
+                        ))}
+                    </Box>
+                    <Box padding='50px 0'>
+                        {[0, 1, 2].map((value) => (
+                            <IconButton
+                                key={value}
+                                size="small"
+                                onClick={onSetStart(value * 10)}
+                                style={{width:'30px',height:'30px',borderRadius:'50%',backgroundColor:checkIsCurrentPage(value) ? '#FF5556':'',color:checkIsCurrentPage(value)? "#FFF":'' }}
+                                >
+                                {value + 1}
+                              
+                            </IconButton>
+                        ))}
+                    </Box>
+                </Container>
+            </main>
+        </Box>
     );
 }
 
