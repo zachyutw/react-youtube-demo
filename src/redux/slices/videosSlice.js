@@ -3,40 +3,39 @@ import { searchYoutube } from '../../api/youtube';
 import thunkDispatcher from '../thunkDispatcher';
 import localJSON from '../../utils/localJSON';
 const NAME = 'videos';
-const LOADING_STATE = ['pending', 'idle', 'error'];
+export const LOADING_STATE = ['pending', 'idle', 'error'];
 
 const IDS = {
-    videoQ:'videoQ',
-    videosCache:'videosCache',
-    videoStart:'videoStart'
-}
-
-
+    videoQ: 'videoQ',
+    videosCache: 'videosCache',
+    videoStart: 'videoStart',
+};
 
 const initialState = {
-    start: +localStorage.getItem(IDS.videoStart) > 20 ? 0:+localStorage.getItem(IDS.videoStart),
+    start:
+        +localStorage.getItem(IDS.videoStart) > 20
+            ? 0
+            : +localStorage.getItem(IDS.videoStart),
     data: localJSON.getItem(IDS.videosCache) || { items: [] },
-    loading: false,
+    loading: null,
     error: {},
-    params:{
+    params: {
         q: localStorage.getItem(IDS.videoQ) || '',
         pageToken: undefined,
     },
 };
 
-
-
 const slice = createSlice({
     name: NAME,
     initialState,
     reducers: {
-    fetchLoading(state) {
+        fetchLoading(state) {
             state.loading = LOADING_STATE[0];
         },
         receivedVideos(state, action) {
             state.data = action.payload;
-            localJSON.setItem(IDS.videosCache,action.payload);
             state.loading = LOADING_STATE[1];
+            localJSON.setItem(IDS.videosCache, action.payload);
         },
         fetchFailure(state, action) {
             state.loading = LOADING_STATE[2];
@@ -44,18 +43,18 @@ const slice = createSlice({
         },
         setQuery(state, action) {
             state.params.q = action.payload;
-            localStorage.setItem(IDS.videoQ,action.payload);
+            localStorage.setItem(IDS.videoQ, action.payload);
         },
-        setStart(state,action){
+        setStart(state, action) {
             state.start = action.payload;
-            console.log(state.data.items.length,action.payload);
-            localStorage.setItem(IDS.videoStart,action.payload);
+            console.log(state.data.items.length, action.payload);
+            localStorage.setItem(IDS.videoStart, action.payload);
         },
-        concatVideosToItems(state,action){
+        concatVideosToItems(state, action) {
             state.data.items = state.data.items.concat(action.payload.items);
             state.data.nextPageToken = action.payload.nextPageToken;
             state.loading = LOADING_STATE[1];
-        }
+        },
     },
 });
 
@@ -78,13 +77,12 @@ export const searchVideos = (params) => (dispatch) =>
     });
 
 export const loadMoreVideos = (params) => (dispatch) =>
-thunkDispatcher({
-    promise: searchYoutube(params),
-    dispatch,
-    success: concatVideosToItems,
-    fetchLoading,
-    fetchFailure,
-});
-
+    thunkDispatcher({
+        promise: searchYoutube(params),
+        dispatch,
+        success: concatVideosToItems,
+        fetchLoading,
+        fetchFailure,
+    });
 
 export default slice.reducer;

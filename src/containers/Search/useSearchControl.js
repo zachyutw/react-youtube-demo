@@ -10,8 +10,9 @@ import {
 
 const useSearchControl = () => {
     const {
+        start,
         params: { q },
-        data: { nextPageToken },
+        data: { nextPageToken,items },
     } = useSelector((state) => state.video);
 
     const dispatch = useDispatch();
@@ -20,6 +21,13 @@ const useSearchControl = () => {
         // dispatch(searchVideos({ q }));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    useEffect(() => {
+        if (start === items.length) {
+            onLoadMore();
+        }
+    }, [start, items]);
+
     const onSearchChange = useCallback((e) => {
         dispatch(setQuery(e.target.value));
     }, []);
@@ -38,8 +46,8 @@ const useSearchControl = () => {
         dispatch(searchVideos({ q, pageToken: nextPageToken }));
     }, [q, nextPageToken]);
 
-    const onSetStart = useCallback((start) => ()=> {
-        dispatch(setStart(start));
+    const onSetStart = useCallback( (start)=> {
+        dispatch(setStart(start * 10));
     },[]);
 
     const onLoadMore = useCallback(()=>{

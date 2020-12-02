@@ -1,8 +1,8 @@
-import { render, screen } from '@testing-library/react';
-import App from './App';
+import App, { IDS } from './App';
+import { render } from './test-utils';
 
 test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+    const { getByTestId } = render(<App />);
+    const appTestId = getByTestId(IDS.appTestId);
+    expect(appTestId).toBeTruthy();
 });

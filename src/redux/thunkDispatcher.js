@@ -1,5 +1,5 @@
 const thunkDispatcher = async ({promise,success,fetchLoading,fetchFailure,dispatch})=>{
-    dispatch(fetchLoading);
+    dispatch(fetchLoading());
     try {
         const resp = await Promise.resolve(promise);
         dispatch(success(resp.data));
