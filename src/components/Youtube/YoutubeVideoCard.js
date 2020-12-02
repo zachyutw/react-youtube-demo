@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { Box, makeStyles,Typography } from '@material-ui/core';
 import clsx from 'clsx';
 const useStyles = makeStyles((theme) => ({
@@ -29,3 +30,7 @@ const YoutubeVideoCard = ({ data }) => {
 };
 
 export default YoutubeVideoCard;
+
+YoutubeVideoCard.propTypes ={
+    data:PropTypes.object
+}

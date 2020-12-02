@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import {
     FormControl,
     Input,
@@ -90,3 +91,11 @@ const SearchBar = ({
 };
 
 export default SearchBar;
+
+SearchBar.propTypes = {
+    onChange:PropTypes.func,
+    placeholder:PropTypes.string,
+    query:PropTypes.string,
+    onClear:PropTypes.func,
+    onSubmit:PropTypes.func
+}

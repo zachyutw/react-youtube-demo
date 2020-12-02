@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles } from '@material-ui/core/styles';
@@ -20,4 +21,7 @@ export default function SimpleBackdrop({ open }) {
             </Backdrop>
         </div>
     );
+}
+SimpleBackdrop.propTypes={
+    open:PropTypes.bool
 }
