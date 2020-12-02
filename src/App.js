@@ -1,7 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 // import logo from './logo.svg';
 import './App.css';
-import { useMemo } from 'react';
+import 'hover.css/css/hover.css';
+import { useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { Container, Box } from '@material-ui/core';
 import styled from 'styled-components';
@@ -35,6 +36,7 @@ function App() {
         onSearchClear,
         onSearchSubmit,
         onSetStart,
+        onLoadMore,
     } = useSearchControl();
 
     const {
@@ -48,6 +50,13 @@ function App() {
 
     const theme =useTheme();
 
+    useEffect(()=>{
+        if(start === items.length){
+            onLoadMore();
+        }
+    },[start,items])
+
+    const pages = useMemo( ()=>(items.length /10)+1,[items] );
     return (
         <Box className='App'>
             <Header>
@@ -72,7 +81,7 @@ function App() {
                             </Box>
                         ))}
                     </VideosGrid>
-                    <Pagination onClick={onSetStart} start={start} pages={3} />
+                    <Pagination onClick={onSetStart} start={start} pages={pages} />
                 </Container>
             </main>
         </Box>

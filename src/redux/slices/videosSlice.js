@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { searchYoutube } from '../../api/youtube';
 import thunkDispatcher from '../thunkDispatcher';
-
+import localJSON from '../../utils/localJSON';
 const NAME = 'videos';
 const LOADING_STATE = ['pending', 'idle', 'error'];
 
@@ -11,21 +11,10 @@ const IDS = {
     videoStart:'videoStart'
 }
 
-const localJSON = {
-    getItem: (itemKey)=>{
-        try{
-            return JSON.parse( localStorage.getItem(itemKey));
-        }catch(err){
-            console.error(err);
-            return null
-        }
-    },
-    setItem: (itemKey,item)=> localStorage.setItem(itemKey,JSON.stringify(item))
-}
 
 
 const initialState = {
-    start: +localStorage.getItem(IDS.videoStart) || 0,
+    start: +localStorage.getItem(IDS.videoStart) > 20 ? 0:+localStorage.getItem(IDS.videoStart),
     data: localJSON.getItem(IDS.videosCache) || { items: [] },
     loading: false,
     error: {},
@@ -59,7 +48,13 @@ const slice = createSlice({
         },
         setStart(state,action){
             state.start = action.payload;
+            console.log(state.data.items.length,action.payload);
             localStorage.setItem(IDS.videoStart,action.payload);
+        },
+        concatVideosToItems(state,action){
+            state.data.items = state.data.items.concat(action.payload.items);
+            state.data.nextPageToken = action.payload.nextPageToken;
+            state.loading = LOADING_STATE[1];
         }
     },
 });
@@ -68,6 +63,7 @@ export const {
     fetchLoading,
     receivedVideos,
     fetchFailure,
+    concatVideosToItems,
     setQuery,
     setStart,
 } = slice.actions;
@@ -80,6 +76,15 @@ export const searchVideos = (params) => (dispatch) =>
         fetchLoading,
         fetchFailure,
     });
+
+export const loadMoreVideos = (params) => (dispatch) =>
+thunkDispatcher({
+    promise: searchYoutube(params),
+    dispatch,
+    success: concatVideosToItems,
+    fetchLoading,
+    fetchFailure,
+});
 
 
 export default slice.reducer;

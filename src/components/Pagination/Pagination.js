@@ -6,6 +6,8 @@ import RoundNumberButton from '../IconButton/RoundNumberButton';
 const useStyles = makeStyles((theme) => ({
     root: {
         padding:`${theme.spacing(5)}px 0`,
+        overflowX:'auto',
+        whiteSpace:'nowrap',
         '& button':{
             margin:theme.spacing(1)
         }
@@ -15,8 +17,6 @@ const useStyles = makeStyles((theme) => ({
 const Pagination = ({ onClick, start, pages }) => {
     const classes = useStyles();
     const items = useMemo(() => [...Array(pages).keys()], [pages]);
-    console.log(start);
-    console.log(typeof start);
     return (
         <Box className={clsx(classes.root)} >
             {items.map((value) => (

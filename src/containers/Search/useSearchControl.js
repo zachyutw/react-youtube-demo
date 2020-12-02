@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
     setQuery,
     searchVideos,
+    loadMoreVideos,
     setStart,
 } from '../../redux/slices/videosSlice';
 
@@ -13,7 +14,6 @@ const useSearchControl = () => {
         data: { nextPageToken },
     } = useSelector((state) => state.video);
 
-    console.log(nextPageToken);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -26,6 +26,7 @@ const useSearchControl = () => {
 
     const onSearchClear = useCallback(() => {
         dispatch(setQuery(''));
+        dispatch(setStart(0));
         dispatch(searchVideos({ q: '' }));
     }, []);
 
@@ -37,10 +38,13 @@ const useSearchControl = () => {
         dispatch(searchVideos({ q, pageToken: nextPageToken }));
     }, [q, nextPageToken]);
 
-    const onSetStart = useCallback((startEnd) => ()=> {
-        console.log(startEnd);
-        dispatch(setStart(startEnd));
+    const onSetStart = useCallback((start) => ()=> {
+        dispatch(setStart(start));
     },[]);
+
+    const onLoadMore = useCallback(()=>{
+        dispatch(loadMoreVideos({ q, pageToken: nextPageToken }));
+    },[q,nextPageToken])
     return {
         q,
         onSearchChange,
@@ -48,6 +52,7 @@ const useSearchControl = () => {
         onSearchSubmit,
         onSearchNextPage,
         onSetStart,
+        onLoadMore
     };
 };
 
