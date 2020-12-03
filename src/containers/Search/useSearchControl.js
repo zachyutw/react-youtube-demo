@@ -18,7 +18,7 @@ const useSearchControl = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        // dispatch(searchVideos({ q }));
+        dispatch(searchVideos({ q }));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

@@ -5,10 +5,10 @@ describe(`${NAME} testing`, () => {
     afterEach(cleanup);
 
     test('render success', () => {
-        const { getAllByTestId } = render(
+        const { getByTestId } = render(
             <RoundNumberButton>foo</RoundNumberButton>
         );
-        const root = getAllByTestId(IDS.name);
+        const root = getByTestId(IDS.name);
         expect(root).toBeTruthy();
     });
     test('click button', () => {

@@ -5,6 +5,8 @@ import localJSON from '../../utils/localJSON';
 const NAME = 'videos';
 export const LOADING_STATE = ['pending', 'idle', 'error'];
 
+
+
 const IDS = {
     videoQ: 'videoQ',
     videosCache: 'videosCache',
@@ -47,7 +49,6 @@ const slice = createSlice({
         },
         setStart(state, action) {
             state.start = action.payload;
-            console.log(state.data.items.length, action.payload);
             localStorage.setItem(IDS.videoStart, action.payload);
         },
         concatVideosToItems(state, action) {
