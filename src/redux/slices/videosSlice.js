@@ -5,8 +5,6 @@ import localJSON from '../../utils/localJSON';
 const NAME = 'videos';
 export const LOADING_STATE = ['pending', 'idle', 'error'];
 
-
-
 const IDS = {
     videoQ: 'videoQ',
     videosCache: 'videosCache',
@@ -68,7 +66,7 @@ export const {
     setStart,
 } = slice.actions;
 
-export const searchVideos = (params) => (dispatch) =>
+export const searchVideos = (params) => (dispatch) => {
     thunkDispatcher({
         promise: searchYoutube(params),
         dispatch,
@@ -76,14 +74,16 @@ export const searchVideos = (params) => (dispatch) =>
         fetchLoading,
         fetchFailure,
     });
+};
 
-export const loadMoreVideos = (params) => (dispatch) =>
+export const loadMoreVideos = (params) => (dispatch) => {
     thunkDispatcher({
         promise: searchYoutube(params),
         dispatch,
-        success: concatVideosToItems,
+        success: receivedVideos,
         fetchLoading,
         fetchFailure,
     });
+};
 
 export default slice.reducer;

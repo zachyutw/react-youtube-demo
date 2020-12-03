@@ -6,41 +6,48 @@ import {
     IconButton,
     InputLabel,
     makeStyles,
-    colors
+    colors,
 } from '@material-ui/core';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { Search, Close } from '@material-ui/icons';
 import clsx from 'clsx';
 import { ThemeProvider } from '@material-ui/core/styles';
 
-const theme = createMuiTheme({palette:{
-    primary:{
-        main:'#FFF',
-        contrastText:'#FFF'
+export const NAME = 'SearchBar';
+export const IDS = {
+    name: NAME,
+};
+
+const theme = createMuiTheme({
+    palette: {
+        primary: {
+            main: '#FFF',
+            contrastText: '#FFF',
+        },
     },
-}})
+});
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        '& ..MuiInputBase-input':{
-            color:'#FFF'
+        '& ..MuiInputBase-input': {
+            color: '#FFF',
         },
-        '& .MuiInput-underline:before':{
-            borderColor: '#FFF'
+        '& .MuiInput-underline:before': {
+            borderColor: '#FFF',
         },
-        '& .MuiInput-underline:hover:not(.Mui-disabled):before':{
-            borderColor: colors.deepOrange[100]
+        '& .MuiInput-underline:hover:not(.Mui-disabled):before': {
+            borderColor: colors.deepOrange[100],
         },
-        '& .MuiSvgIcon-root':{
-            color:'#FFF'
+        '& .MuiSvgIcon-root': {
+            color: '#FFF',
         },
-        '& .MuiFormLabel-root':{
-            color:'#FFF'
-        }
+        '& .MuiFormLabel-root': {
+            color: '#FFF',
+        },
     },
     margin: {
-        marginTop:theme.spacing(1),
-        marginBottom:theme.spacing(2),
+        marginTop: theme.spacing(1),
+        marginBottom: theme.spacing(2),
         // color:'#FFF'
     },
     withoutLabel: {
@@ -61,31 +68,36 @@ const SearchBar = ({
     const classes = useStyles();
     return (
         <ThemeProvider theme={theme}>
-        <form >
-            <FormControl color='primary' className={clsx(classes.margin,classes.root)} fullWidth>
-                <InputLabel color="primary" htmlFor='standard-adornment-password'>
-                    {placeholder}
-                </InputLabel>
-                <Input
-                    color="primary"
-                    onChange={onChange}
-                    value={query}
-                    endAdornment={
-                        <InputAdornment position='end'>
-                            {query.length > 0 && (
-                                <IconButton  onClick={onClear}>
-                                    <Close />
-                                </IconButton>
-                            )}
+            <form data-testid={IDS.name}>
+                <FormControl
+                    color='primary'
+                    className={clsx(classes.margin, classes.root)}
+                    fullWidth>
+                    <InputLabel
+                        color='primary'
+                        htmlFor='standard-adornment-password'>
+                        {placeholder}
+                    </InputLabel>
+                    <Input
+                        color='primary'
+                        onChange={onChange}
+                        value={query}
+                        endAdornment={
+                            <InputAdornment position='end'>
+                                {query.length > 0 && (
+                                    <IconButton onClick={onClear}>
+                                        <Close />
+                                    </IconButton>
+                                )}
 
-                            <IconButton  onClick={onSubmit}>
-                                <Search />
-                            </IconButton>
-                        </InputAdornment>
-                    }
-                />
-            </FormControl>
-        </form>
+                                <IconButton onClick={onSubmit}>
+                                    <Search />
+                                </IconButton>
+                            </InputAdornment>
+                        }
+                    />
+                </FormControl>
+            </form>
         </ThemeProvider>
     );
 };
@@ -93,9 +105,9 @@ const SearchBar = ({
 export default SearchBar;
 
 SearchBar.propTypes = {
-    onChange:PropTypes.func,
-    placeholder:PropTypes.string,
-    query:PropTypes.string,
-    onClear:PropTypes.func,
-    onSubmit:PropTypes.func
-}
+    onChange: PropTypes.func,
+    placeholder: PropTypes.string,
+    query: PropTypes.string,
+    onClear: PropTypes.func,
+    onSubmit: PropTypes.func,
+};

@@ -21,3 +21,7 @@ export const searchYoutube = async (params) => {
 
     return resp;
 };
+
+const apis = { searchYoutube}
+
+export default apis;
