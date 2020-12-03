@@ -80,7 +80,7 @@ export const loadMoreVideos = (params) => (dispatch) => {
     thunkDispatcher({
         promise: searchYoutube(params),
         dispatch,
-        success: receivedVideos,
+        success: concatVideosToItems,
         fetchLoading,
         fetchFailure,
     });

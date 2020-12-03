@@ -22,7 +22,9 @@ const useStyles = makeStyles((theme) => ({
 
 const Pagination = ({ onClick, start, pages }) => {
     const classes = useStyles();
+    console.log(pages)
     const items = useMemo(() => [...Array(pages).keys()], [pages]);
+   
     return (
         <Box data-testid={IDS.name} className={clsx(classes.root)}>
             {items.map((value) => (

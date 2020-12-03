@@ -54,7 +54,7 @@ function App() {
     ]);
 
     const theme = useTheme();
-    const pages = useMemo(() => items.length / 10 + 1, [items]);
+    const pages = useMemo(() => Math.floor( (items.length / 10 ))+ 1, [items]);
 
     return (
         <Box data-testid={IDS.appTestId} className='App'>
