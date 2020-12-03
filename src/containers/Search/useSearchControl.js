@@ -39,6 +39,7 @@ const useSearchControl = () => {
     }, []);
 
     const onSearchSubmit = useCallback(() => {
+        dispatch(setStart(0));
         dispatch(searchVideos({ q }));
     }, [q]);
 
